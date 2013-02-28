@@ -18,5 +18,20 @@ typedef boost::function < void( std::string const& ) >  StringAction;
 
 typedef boost::variant<IntAction, DoubleAction, StringAction> action_type;
 
+void apply_action(action_type a, std::string const& x)
+{
+   boost::get<StringAction>(a)(x);
+}
+
+void apply_action(action_type a, int x)
+{
+   boost::get<IntAction>(a)(x);
+}
+
+void apply_action(action_type a, double x)
+{
+   boost::get<DoubleAction>(a)(x);
+}
+
 #endif	/* EBC_TYPES_H */
 
