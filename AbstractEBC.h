@@ -8,7 +8,6 @@
 #ifndef ABSTRACTEBC_H
 #define	ABSTRACTEBC_H
 #include <vector>
-#include <iostream>
 #include "ebc_types.h"
 #include <boost/bind.hpp> 
 
@@ -85,11 +84,13 @@ public:
    virtual size_t NumIn() const {return 1;};
    virtual size_t NumOut() const {return outs.size();};
    virtual action_type In(size_t inPort)  { action_type x = in; return x;};
-   virtual action_type Out(size_t outPort) 
+   virtual action_type Out(size_t outPort) { return outs[outPort]; };
+	void process( T const& x )	
    {
-      action_type x =outs[outPort];  return x;
-   };
-	void process( T const& x )	{}
+      for(size_t i=0; i< outs.size(); i++ ) {
+         if (outs[i]) outs[i](x);
+      }
+   }
 
 };
 
