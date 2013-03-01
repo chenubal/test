@@ -106,9 +106,8 @@ public:
 
     void process(T const& x)
     {
-        for (size_t i = 0; i < outs.size(); i++) {
-            if (outs[i]) outs[i](x);
-        }
+        for (auto out : outs) 
+            if (out) out(x);
     }
 
 };
