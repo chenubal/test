@@ -12,23 +12,16 @@
 
 using namespace std;
 
-/*
- * 
- */
-
-
 int main(int argc, char** argv) {
-
-   Multiplier<string> m(2);
-   ConsoleWriter w1("mueller: "), w2("meier: ");
-   //m.Out(0) = w1.In(0);
-   // m.Out(1) = w2.In(0);
-   connect_actions(m.Out(0),w1.In(0));
-   connect_actions(m.Out(1),w2.In(0));
-   action_type x = m.In(0);
-   cout << x.type().name() << endl;
-   cout << m.Out(0).type().name() << endl;
-   apply_action(x,"safjhdskj");
+   //BUILD
+   Multiplier<string> m(3);
+   ConsoleWriter w1("mueller: "), w2("meier: "),  w3("heers: ");
+   //BIND
+   m.Out( 0, w1.In(0) );
+   m.Out( 1, w2.In(0) );
+   m.Out( 2, w3.In(0) );
+   //RUN
+   boost::get<StringAction>(m.In(0))("Harry");
    return 0;
 }
 

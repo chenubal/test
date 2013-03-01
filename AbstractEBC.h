@@ -17,16 +17,9 @@ public:
     virtual size_t NumIn() const = 0;
     virtual size_t NumOut() const = 0;
     virtual action_type In(size_t inPort) = 0;
-    virtual action_type Out(size_t outPort) = 0;
+    virtual void Out(size_t outPort, action_type other) = 0;
     virtual ~AbstractEBC() {};
 };
-
-bool EBC_Connect(action_type & out, action_type &in)
-{
-   int ok = typeid(out) == typeid(in);
-   if (ok) out = in;
-   return ok;
-}
 
 
 /// A generic terminal EBC, with a single T input and no output
@@ -37,7 +30,7 @@ public:
     virtual size_t NumIn() const {return 1;};
     virtual size_t NumOut() const {return 0;};
     virtual action_type In(size_t inPort) {return in;};
-    virtual action_type Out(size_t outPort) {throw "empty";};
+    virtual void Out(size_t outPort, action_type other) {throw "empty";};
 
     typedef boost::function < void ( T const& ) > action_t;
 
@@ -47,7 +40,7 @@ public:
 	/// @author silverback
 	Terminal()
 	{
-		in = boost::bind( &Terminal<T>::process, this, _1 );
+		in = boost::bind( &Terminal<T>::process, this, _1 ) ;
 	}
 	/// Main processing ( to be overwritten)
 	/// @param	x give the input value
@@ -66,7 +59,6 @@ public:
 	virtual void process( std::string const& message ) {	std::cout << prefix << message << std::endl; }
 };
 
-
 template<class T>
 class Multiplier
 {
@@ -77,14 +69,17 @@ class Multiplier
 public:
 	Multiplier( size_t numOuts )
 	{
-		in = boost::bind( &Multiplier<T>::process, this, _1 );
+		in = boost::bind( &Multiplier<T>::process, this, _1 ) ;
 		outs.resize( numOuts );
 	}
 
    virtual size_t NumIn() const {return 1;};
    virtual size_t NumOut() const {return outs.size();};
-   virtual action_type In(size_t inPort)  { action_type x = in; return x;};
-   virtual action_type Out(size_t outPort) { return outs[outPort]; };
+   virtual action_type In(size_t inPort)  {  return in;};
+   virtual void Out(size_t outPort, action_type other) 
+   { 
+      outs[outPort] = boost::get<action_t>(other); 
+   };
 	void process( T const& x )	
    {
       for(size_t i=0; i< outs.size(); i++ ) {
