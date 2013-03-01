@@ -9,7 +9,7 @@
 #define	BASICEBC_H
 
 #include <vector>
-#include <boost/bind.hpp> 
+#include <stdexcept>
 #include "AbstractEBC.h"
 
 /// A generic terminal EBC, with a single T input and no output
@@ -21,7 +21,7 @@ public:
 
     Terminal()
     {
-        in = boost::bind(&Terminal<T>::process, this, _1);
+        in = std::bind(&Terminal<T>::process, this, std::placeholders::_1);
     }
 
     virtual size_t NumIn() const
@@ -41,15 +41,14 @@ public:
 
     virtual void Out(size_t outPort, action_type other)
     {
-        throw "empty";
+        throw std::logic_error("no Out port available");
     };
 
-    typedef boost::function < void ( T const&) > action_t;
+    typedef std::function < void ( T const&) > action_t;
 
     action_t in;
 
     /// Main processing ( to be overwritten)
-
     virtual void process(T const& x)
     {
     }
@@ -74,16 +73,15 @@ public:
 template<class T>
 class Multiplier
 {
-    typedef boost::function < void ( T const&) > action_t;
+    typedef std::function < void ( T const&) > action_t;
     action_t in;
     std::vector<action_t> outs;
 
 public:
 
-    Multiplier(size_t numOuts)
+    Multiplier(size_t numOuts) : outs(numOuts)
     {
-        in = boost::bind(&Multiplier<T>::process, this, _1);
-        outs.resize(numOuts);
+        in = std::bind(&Multiplier<T>::process, this, std::placeholders::_1);
     }
 
     virtual size_t NumIn() const

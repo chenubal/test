@@ -9,13 +9,12 @@
 #define	EBC_TYPES_H
 
 #include <string>
-#include <boost/function.hpp>
+#include <functional>
 #include <boost/variant.hpp>
-#include <iostream>
 
-typedef boost::function < void( int) > IntAction;
-typedef boost::function < void( double) > DoubleAction;
-typedef boost::function < void( std::string const&) > StringAction;
+typedef std::function < void( int) > IntAction;
+typedef std::function < void( double) > DoubleAction;
+typedef std::function < void( std::string const&) > StringAction;
 
 typedef boost::variant<IntAction, DoubleAction, StringAction> action_type;
 
