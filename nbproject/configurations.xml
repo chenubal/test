@@ -5,7 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>AbstractEBC.h</itemPath>
-      <itemPath>ebc_types.h</itemPath>
+      <itemPath>EBC_Types.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -45,7 +45,7 @@
       </compileType>
       <item path="AbstractEBC.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="ebc_types.h" ex="false" tool="3" flavor2="0">
+      <item path="EBC_Types.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -75,7 +75,7 @@
       </compileType>
       <item path="AbstractEBC.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="ebc_types.h" ex="false" tool="3" flavor2="0">
+      <item path="EBC_Types.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>

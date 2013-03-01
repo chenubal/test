@@ -8,7 +8,7 @@
 #ifndef ABSTRACTEBC_H
 #define	ABSTRACTEBC_H
 #include <vector>
-#include "ebc_types.h"
+#include "EBC_Types.h"
 #include <boost/bind.hpp> 
 
 class AbstractEBC 
