@@ -11,6 +11,7 @@
 #include <vector>
 #include <stdexcept>
 #include "AbstractEBC.h"
+#include <iostream>
 
 /// A generic terminal EBC, with a single T input and no output
 
