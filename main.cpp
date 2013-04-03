@@ -6,6 +6,7 @@
  */
 
 #include "BasicEBC.h"
+#include "ImProcEBC.h"
 #include <memory>
 
 // github test
@@ -14,18 +15,24 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
-    //BUILD
-    vector< shared_ptr<ConsoleWriter> > c;
-    Multiplier<string> m(3);
-    c.push_back( std::make_shared<ConsoleWriter>("console x gets ")  );
-    c.push_back( std::make_shared<ConsoleWriter>("console y gets ")  );
-    c.push_back( std::make_shared<ConsoleWriter>("console z gets ")  );
-    //BIND
-    m.Out(0, c[0]->In(0));
-    m.Out(1, c[1]->In(0));
-    m.Out(2, c[2]->In(0));
-    //RUN
-    boost::get<StringAction>(m.In(0))("Harry");
+//    //BUILD
+//    vector< shared_ptr<ConsoleWriter> > c;
+//    Multiplier<string> m(3);
+//    c.push_back( std::make_shared<ConsoleWriter>("console x gets ")  );
+//    c.push_back( std::make_shared<ConsoleWriter>("console y gets ")  );
+//    c.push_back( std::make_shared<ConsoleWriter>("console z gets ")  );
+//    //BIND
+//    m.Out(0, c[0]->In(0));
+//    m.Out(1, c[1]->In(0));
+//    m.Out(2, c[2]->In(0));
+//    //RUN
+//    boost::get<StringAction>(m.In(0))("Harry");
+    Loader l;
+    Writer w("/home/josef/out.jpg");
+    l.Out(0, w.In(0));
+    
+    l.process("/home/josef/img1.jpg");
+    
     return 0;
 }
 

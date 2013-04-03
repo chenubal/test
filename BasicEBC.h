@@ -20,98 +20,136 @@ class Terminal : public AbstractEBC
 {
 public:
 
-    Terminal()
-    {
-        in = std::bind(&Terminal<T>::process, this, std::placeholders::_1);
-    }
+   Terminal()
+   {
+      in = std::bind(&Terminal<T>::process, this, std::placeholders::_1);
+   }
 
-    virtual size_t NumIn() const
-    {
-        return 1;
-    };
+   virtual size_t NumIn() const
+   {
+      return 1;
+   };
 
-    virtual size_t NumOut() const
-    {
-        return 0;
-    };
+   virtual size_t NumOut() const
+   {
+      return 0;
+   };
 
-    virtual action_type In(size_t inPort)
-    {
-        return in;
-    };
+   virtual action_type In(size_t inPort)
+   {
+      return in;
+   };
 
-    virtual void Out(size_t outPort, action_type other)
-    {
-        throw std::logic_error("no Out port available");
-    };
+   virtual void Out(size_t outPort, action_type other)
+   {
+      throw std::logic_error("no Out port available");
+   };
 
-    typedef std::function < void ( T const&) > action_t;
+   typedef std::function < void ( T const&) > action_t;
 
-    action_t in;
+   action_t in;
 
-    /// Main processing ( to be overwritten)
-    virtual void process(T const& x)
-    {
-    }
+   /// Main processing ( to be overwritten)
+   virtual void process(T const& ) = 0;
 };
 
 class ConsoleWriter : public Terminal<std::string>
 {
-    std::string prefix;
+   std::string prefix;
 public:
 
-    ConsoleWriter(std::string s = "") : prefix(s)
-    {
-    }
+   ConsoleWriter(std::string s = "") : prefix(s) { }
 
-    /// Prints a message
-    virtual void process(std::string const& message)
-    {
-        std::cout << prefix << message << std::endl;
-    }
+   /// Prints a message
+
+   virtual void process(std::string const& message)
+   {
+      std::cout << prefix << message << std::endl;
+   }
+};
+
+template<class T, class S>
+class Isomorph
+{
+public:
+   typedef std::function < void ( T const&) > action_in_t;
+   typedef std::function < void ( S const&) > action_out_t;
+   action_in_t in;
+   action_out_t out;
+
+   Isomorph()
+   {
+      in = std::bind(&Isomorph<T, S>::process, this, std::placeholders::_1);
+   }
+
+   virtual size_t NumIn() const
+   {
+      return 1;
+   };
+
+   virtual size_t NumOut() const
+   {
+      return 1;
+   };
+
+   virtual action_type In(size_t inPort)
+   {
+      return in;
+   };
+
+   virtual void Out(size_t outPort, action_type other)
+   {
+      out = boost::get<action_out_t>(other);
+   };
+   
+   virtual void process(T const&) = 0;
+};
+
+template<class T>
+class Automorph : Isomorph<T, T>
+{
 };
 
 template<class T>
 class Multiplier
 {
-    typedef std::function < void ( T const&) > action_t;
-    action_t in;
-    std::vector<action_t> outs;
+   typedef std::function < void ( T const&) > action_t;
+   action_t in;
+   std::vector<action_t> outs;
 
 public:
 
-    Multiplier(size_t numOuts) : outs(numOuts)
-    {
-        in = std::bind(&Multiplier<T>::process, this, std::placeholders::_1);
-    }
+   Multiplier(size_t numOuts) : outs(numOuts)
+   {
+      in = std::bind(&Multiplier<T>::process, this, std::placeholders::_1);
+   }
 
-    virtual size_t NumIn() const
-    {
-        return 1;
-    };
+   virtual size_t NumIn() const
+   {
+      return 1;
+   };
 
-    virtual size_t NumOut() const
-    {
-        return outs.size();
-    };
+   virtual size_t NumOut() const
+   {
+      return outs.size();
+   };
 
-    virtual action_type In(size_t inPort)
-    {
-        return in;
-    };
+   virtual action_type In(size_t inPort)
+   {
+      return in;
+   };
 
-    virtual void Out(size_t outPort, action_type other)
-    {
-        outs[outPort] = boost::get<action_t>(other);
-    };
+   virtual void Out(size_t outPort, action_type other)
+   {
+      outs[outPort] = boost::get<action_t>(other);
+   };
 
-    void process(T const& x)
-    {
-        for (auto out : outs) 
-            if (out) out(x);
-    }
+   void process(T const& x)
+   {
+      for (auto out : outs)
+         if (out) out(x);
+   }
 
 };
 
 #endif	/* BASICEBC_H */
-
